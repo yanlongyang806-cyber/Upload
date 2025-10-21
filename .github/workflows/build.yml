@@ -1,4 +1,4 @@
-name: Build Windows x64 DLL & Injector
+name: Build VEH DLL and Injector (MSVC)
 
 on:
   push:
@@ -13,23 +13,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Set up MSYS2
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: MINGW64
-        update: true
-        install: >
-          mingw-w64-x86_64-gcc
-          mingw-w64-x86_64-cmake
+    - name: Set up MSVC Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1
 
-    - name: Build VEH DLL and Injector (MINGW)
-      shell: bash
+    - name: Build DLL and EXE with MSVC
+      shell: cmd
       run: |
-        mkdir -p build
-        x86_64-w64-mingw32-g++ -O2 -shared -static -fno-exceptions -fno-rtti -std=gnu++17 VEHSkipPatch.cpp -o build/VEHSkipPatch.dll -Wl,--out-implib,build/libveh.a
-        x86_64-w64-mingw32-g++ -O2 -static -std=gnu++17 注入器.cpp -o build/Injector.exe
+        mkdir build
+        cl /LD /EHsc VEHSkipPatch.cpp /Fe:build\VEHSkipPatch.dll
+        cl /EHsc 注入器.cpp /Fe:build\Injector.exe
 
-    - name: Upload artifact
+    - name: Upload compiled files
       uses: actions/upload-artifact@v4
       with:
         name: patch-build
