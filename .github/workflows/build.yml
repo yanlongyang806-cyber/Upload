@@ -21,7 +21,7 @@ jobs:
       run: |
         mkdir build
         cl /LD /EHsc VEHSkipPatch.cpp /Fe:build\VEHSkipPatch.dll
-        cl /EHsc 注入器.cpp /Fe:build\Injector.exe
+        cl /EHsc Injector.cpp /Fe:build\Injector.exe
 
     - name: Upload compiled files
       uses: actions/upload-artifact@v4
